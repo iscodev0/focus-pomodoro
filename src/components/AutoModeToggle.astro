@@ -1,0 +1,56 @@
+---
+// Toggle for automatic mode that auto-starts breaks
+---
+
+<div class="auto-mode-toggle">
+	<input type="checkbox" id="autoMode" checked />
+	<label for="autoMode">
+		<span class="toggle-icon">⚡</span>
+		<span class="toggle-text">Modo automático activado</span>
+		<span class="toggle-hint">Los descansos inician automáticamente</span>
+	</label>
+</div>
+
+<style>
+	.auto-mode-toggle {
+		background: var(--bg-tertiary);
+		border: 1px solid var(--border-color);
+		border-radius: 12px;
+		padding: 16px;
+	}
+
+	.auto-mode-toggle input[type="checkbox"] {
+		display: none;
+	}
+
+	.auto-mode-toggle label {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		cursor: pointer;
+		flex-direction: column;
+	}
+
+	.toggle-icon {
+		font-size: 1.5rem;
+	}
+
+	.toggle-text {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+
+	.toggle-hint {
+		font-size: 0.75rem;
+		color: var(--text-secondary);
+	}
+
+	.auto-mode-toggle input:checked + label {
+		color: var(--accent-break);
+	}
+
+	.auto-mode-toggle input:checked + label .toggle-icon {
+		animation: pulse 2s infinite;
+	}
+</style>

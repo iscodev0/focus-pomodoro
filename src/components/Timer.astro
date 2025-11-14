@@ -1,0 +1,126 @@
+---
+// Circular timer display with progress ring
+---
+
+<div class="timer-section">
+	<div class="session-badge" id="sessionBadge">Pomodoro</div>
+	
+	<div class="timer-container">
+		<svg class="timer-circle" viewBox="0 0 200 200">
+			<circle class="timer-bg" cx="100" cy="100" r="90"></circle>
+			<circle class="timer-progress" cx="100" cy="100" r="90"></circle>
+		</svg>
+		<div class="timer-display">
+			<div class="timer-text" id="timerDisplay">25:00</div>
+			<div class="timer-label" id="timerLabel">Presiona iniciar para comenzar</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.timer-section {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 32px;
+	}
+
+	.session-badge {
+		background: var(--accent-pomodoro);
+		color: white;
+		padding: 8px 20px;
+		border-radius: 20px;
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+
+	.session-badge.break {
+		background: var(--accent-break);
+	}
+
+	.session-badge.long-break {
+		background: var(--accent-long-break);
+	}
+
+	.session-badge.long-focus {
+		background: var(--accent-long-focus);
+	}
+
+	.timer-container {
+		position: relative;
+		width: 320px;
+		height: 320px;
+	}
+
+	.timer-container.pulse {
+		animation: pulse 0.5s ease-in-out;
+	}
+
+	.timer-circle {
+		width: 100%;
+		height: 100%;
+		transform: rotate(-90deg);
+	}
+
+	.timer-bg {
+		fill: none;
+		stroke: var(--bg-tertiary);
+		stroke-width: 12;
+	}
+
+	.timer-progress {
+		fill: none;
+		stroke: var(--accent-pomodoro);
+		stroke-width: 12;
+		stroke-linecap: round;
+		stroke-dasharray: 565.48;
+		stroke-dashoffset: 0;
+		transition: stroke-dashoffset 1s linear;
+	}
+
+	.timer-progress.break {
+		stroke: var(--accent-break);
+	}
+
+	.timer-progress.long-break {
+		stroke: var(--accent-long-break);
+	}
+
+	.timer-progress.long-focus {
+		stroke: var(--accent-long-focus);
+	}
+
+	.timer-display {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		text-align: center;
+	}
+
+	.timer-text {
+		font-size: 4.5rem;
+		font-weight: 800;
+		margin-bottom: 8px;
+		letter-spacing: -2px;
+	}
+
+	.timer-label {
+		font-size: 1rem;
+		color: var(--text-secondary);
+		font-weight: 500;
+	}
+
+	@media (max-width: 768px) {
+		.timer-container {
+			width: 280px;
+			height: 280px;
+		}
+
+		.timer-text {
+			font-size: 3.5rem;
+		}
+	}
+</style>

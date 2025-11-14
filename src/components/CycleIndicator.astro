@@ -1,0 +1,64 @@
+---
+// Visual indicator showing progress through the 4-pomodoro cycle
+---
+
+<div class="cycle-indicator">
+	<div class="cycle-title">Ciclo actual</div>
+	<div class="cycle-dots" id="cycleDots">
+		<span class="dot"></span>
+		<span class="dot"></span>
+		<span class="dot"></span>
+		<span class="dot"></span>
+	</div>
+	<div class="cycle-info" id="cycleInfo">0 de 4 pomodoros</div>
+</div>
+
+<style>
+	.cycle-indicator {
+		background: var(--bg-tertiary);
+		border: 1px solid var(--border-color);
+		border-radius: 16px;
+		padding: 20px;
+		text-align: center;
+	}
+
+	.cycle-title {
+		font-size: 0.875rem;
+		color: var(--text-secondary);
+		margin-bottom: 16px;
+		font-weight: 500;
+	}
+
+	.cycle-dots {
+		display: flex;
+		gap: 12px;
+		justify-content: center;
+		margin-bottom: 12px;
+	}
+
+	.dot {
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		background: var(--bg-secondary);
+		border: 2px solid var(--border-color);
+		transition: all 0.3s ease;
+	}
+
+	.dot.completed {
+		background: var(--accent-pomodoro);
+		border-color: var(--accent-pomodoro);
+		box-shadow: 0 0 12px var(--accent-pomodoro);
+	}
+
+	.dot.active {
+		background: var(--accent-long-focus);
+		border-color: var(--accent-long-focus);
+		transform: scale(1.2);
+	}
+
+	.cycle-info {
+		font-size: 0.875rem;
+		color: var(--text-secondary);
+	}
+</style>

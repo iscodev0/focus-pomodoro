@@ -1,0 +1,86 @@
+---
+// Control buttons for timer (start, skip, reset)
+---
+
+<div class="controls">
+	<button class="control-btn start-btn" id="startBtn">
+		<span class="btn-icon">▶</span>
+		<span class="btn-text">Iniciar</span>
+	</button>
+	<button class="control-btn skip-btn" id="skipBtn">
+		<span class="btn-icon">⏭</span>
+		<span class="btn-text">Saltar</span>
+	</button>
+	<button class="control-btn reset-btn" id="resetBtn">
+		<span class="btn-icon">↻</span>
+		<span class="btn-text">Reiniciar</span>
+	</button>
+</div>
+
+<style>
+	.controls {
+		display: flex;
+		gap: 12px;
+		justify-content: center;
+	}
+
+	.control-btn {
+		background: var(--bg-tertiary);
+		border: 2px solid var(--border-color);
+		border-radius: 12px;
+		padding: 14px 28px;
+		font-size: 1rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: var(--text-primary);
+	}
+
+	.control-btn:hover {
+		background: var(--bg-secondary);
+		transform: translateY(-2px);
+	}
+
+	.start-btn {
+		background: var(--accent-pomodoro);
+		border-color: var(--accent-pomodoro);
+		color: white;
+	}
+
+	.start-btn:hover {
+		background: #dc2626;
+		border-color: #dc2626;
+	}
+
+	.start-btn.running {
+		background: var(--accent-long-focus);
+		border-color: var(--accent-long-focus);
+	}
+
+	.start-btn.running:hover {
+		background: #d97706;
+		border-color: #d97706;
+	}
+
+	.skip-btn, .reset-btn {
+		background: var(--bg-tertiary);
+	}
+
+	.btn-icon {
+		font-size: 1.125rem;
+	}
+
+	@media (max-width: 768px) {
+		.controls {
+			flex-wrap: wrap;
+		}
+
+		.control-btn {
+			flex: 1;
+			min-width: 120px;
+		}
+	}
+</style>

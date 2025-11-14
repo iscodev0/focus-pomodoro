@@ -1,16 +1,967 @@
 ---
-
+// Pomodoro Timer App - Optimizado para TDAH
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import IllustrationPanel from '../components/IllustrationPanel.astro';
+import CycleIndicator from '../components/CycleIndicator.astro';
+import ModeSelector from '../components/ModeSelector.astro';
+import AutoModeToggle from '../components/AutoModeToggle.astro';
+import Timer from '../components/Timer.astro';
+import SessionControls from '../components/SessionControls.astro';
+import HistoryPanel from '../components/HistoryPanel.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
+<Layout title="Focus Timer - Pomodoro para TDAH">
+	<div class="main-layout">
+		<div class="left-panel">
+			<Header />
+			<IllustrationPanel />
+			<CycleIndicator />
+			<ModeSelector />
+			<AutoModeToggle />
+		</div>
+
+		<div class="right-panel">
+			<Timer />
+			<SessionControls />
+			<HistoryPanel />
+		</div>
+	</div>
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			:root {
+				--bg-primary: #0d1117;
+				--bg-secondary: #161b22;
+				--bg-tertiary: #1c2128;
+				--border-color: #30363d;
+				--text-primary: #e6edf3;
+				--text-secondary: #8d96a0;
+				--accent-pomodoro: #ef4444;
+				--accent-break: #10b981;
+				--accent-long-break: #3b82f6;
+				--accent-long-focus: #f59e0b;
+			}
+
+			body {
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+				background: var(--bg-primary);
+				min-height: 100vh;
+				color: var(--text-primary);
+				overflow-x: hidden;
+			}
+
+			.main-layout {
+				display: grid;
+				grid-template-columns: 400px 1fr;
+				min-height: 100vh;
+			}
+
+			.left-panel {
+				background: var(--bg-secondary);
+				border-right: 1px solid var(--border-color);
+				padding: 32px;
+				display: flex;
+				flex-direction: column;
+				gap: 32px;
+			}
+
+			.right-panel {
+				padding: 32px;
+				display: flex;
+				flex-direction: column;
+				gap: 32px;
+			}
+
+			.header {
+				text-align: center;
+			}
+
+			.header h1 {
+				font-size: 2rem;
+				font-weight: 800;
+				margin-bottom: 8px;
+				background: linear-gradient(135deg, var(--accent-pomodoro), var(--accent-long-focus));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.subtitle {
+				font-size: 0.875rem;
+				color: var(--text-secondary);
+				font-weight: 400;
+			}
+
+			.illustration-container {
+				width: 100%;
+				aspect-ratio: 1;
+				border-radius: 20px;
+				overflow: hidden;
+				background: var(--bg-tertiary);
+				border: 1px solid var(--border-color);
+			}
+
+			.focus-image {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: opacity 0.5s ease;
+			}
+
+			.cycle-indicator {
+				background: var(--bg-tertiary);
+				border: 1px solid var(--border-color);
+				border-radius: 16px;
+				padding: 20px;
+				text-align: center;
+			}
+
+			.cycle-title {
+				font-size: 0.875rem;
+				color: var(--text-secondary);
+				margin-bottom: 16px;
+				font-weight: 500;
+			}
+
+			.cycle-dots {
+				display: flex;
+				gap: 12px;
+				justify-content: center;
+				margin-bottom: 12px;
+			}
+
+			.dot {
+				width: 16px;
+				height: 16px;
+				border-radius: 50%;
+				background: var(--bg-secondary);
+				border: 2px solid var(--border-color);
+				transition: all 0.3s ease;
+			}
+
+			.dot.completed {
+				background: var(--accent-pomodoro);
+				border-color: var(--accent-pomodoro);
+				box-shadow: 0 0 12px var(--accent-pomodoro);
+			}
+
+			.dot.active {
+				background: var(--accent-long-focus);
+				border-color: var(--accent-long-focus);
+				transform: scale(1.2);
+			}
+
+			.cycle-info {
+				font-size: 0.875rem;
+				color: var(--text-secondary);
+			}
+
+			.mode-selector {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 12px;
+			}
+
+			.mode-btn {
+				background: var(--bg-tertiary);
+				border: 2px solid var(--border-color);
+				border-radius: 12px;
+				padding: 16px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 8px;
+				color: var(--text-primary);
+			}
+
+			.mode-btn:hover {
+				background: var(--bg-primary);
+				border-color: var(--accent-pomodoro);
+			}
+
+			.mode-btn.active {
+				background: var(--bg-primary);
+				border-color: var(--accent-pomodoro);
+				box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+			}
+
+			.mode-icon {
+				font-size: 2rem;
+			}
+
+			.mode-name {
+				font-size: 0.875rem;
+				font-weight: 600;
+			}
+
+			.mode-time {
+				font-size: 0.75rem;
+				color: var(--text-secondary);
+			}
+
+			.auto-mode-toggle {
+				background: var(--bg-tertiary);
+				border: 1px solid var(--border-color);
+				border-radius: 12px;
+				padding: 16px;
+			}
+
+			.auto-mode-toggle input[type="checkbox"] {
+				display: none;
+			}
+
+			.auto-mode-toggle label {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				cursor: pointer;
+				flex-direction: column;
+			}
+
+			.toggle-icon {
+				font-size: 1.5rem;
+			}
+
+			.toggle-text {
+				font-size: 0.875rem;
+				font-weight: 600;
+				color: var(--text-primary);
+			}
+
+			.toggle-hint {
+				font-size: 0.75rem;
+				color: var(--text-secondary);
+			}
+
+			.auto-mode-toggle input:checked + label {
+				color: var(--accent-break);
+			}
+
+			.auto-mode-toggle input:checked + label .toggle-icon {
+				animation: pulse 2s infinite;
+			}
+
+			.timer-section {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 32px;
+			}
+
+			.session-badge {
+				background: var(--accent-pomodoro);
+				color: white;
+				padding: 8px 20px;
+				border-radius: 20px;
+				font-size: 0.875rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			.session-badge.break {
+				background: var(--accent-break);
+			}
+
+			.session-badge.long-break {
+				background: var(--accent-long-break);
+			}
+
+			.session-badge.long-focus {
+				background: var(--accent-long-focus);
+			}
+
+			.timer-container {
+				position: relative;
+				width: 320px;
+				height: 320px;
+			}
+
+			.timer-circle {
+				width: 100%;
+				height: 100%;
+				transform: rotate(-90deg);
+			}
+
+			.timer-bg {
+				fill: none;
+				stroke: var(--bg-tertiary);
+				stroke-width: 12;
+			}
+
+			.timer-progress {
+				fill: none;
+				stroke: var(--accent-pomodoro);
+				stroke-width: 12;
+				stroke-linecap: round;
+				stroke-dasharray: 565.48;
+				stroke-dashoffset: 0;
+				transition: stroke-dashoffset 1s linear;
+			}
+
+			.timer-progress.break {
+				stroke: var(--accent-break);
+			}
+
+			.timer-progress.long-break {
+				stroke: var(--accent-long-break);
+			}
+
+			.timer-progress.long-focus {
+				stroke: var(--accent-long-focus);
+			}
+
+			.timer-display {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				text-align: center;
+			}
+
+			.timer-text {
+				font-size: 4.5rem;
+				font-weight: 800;
+				margin-bottom: 8px;
+				letter-spacing: -2px;
+			}
+
+			.timer-label {
+				font-size: 1rem;
+				color: var(--text-secondary);
+				font-weight: 500;
+			}
+
+			.controls {
+				display: flex;
+				gap: 12px;
+				justify-content: center;
+			}
+
+			.control-btn {
+				background: var(--bg-tertiary);
+				border: 2px solid var(--border-color);
+				border-radius: 12px;
+				padding: 14px 28px;
+				font-size: 1rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				color: var(--text-primary);
+			}
+
+			.control-btn:hover {
+				background: var(--bg-secondary);
+				transform: translateY(-2px);
+			}
+
+			.start-btn {
+				background: var(--accent-pomodoro);
+				border-color: var(--accent-pomodoro);
+				color: white;
+			}
+
+			.start-btn:hover {
+				background: #dc2626;
+				border-color: #dc2626;
+			}
+
+			.start-btn.running {
+				background: var(--accent-long-focus);
+				border-color: var(--accent-long-focus);
+			}
+
+			.start-btn.running:hover {
+				background: #d97706;
+				border-color: #d97706;
+			}
+
+			.skip-btn, .reset-btn {
+				background: var(--bg-tertiary);
+			}
+
+			.btn-icon {
+				font-size: 1.125rem;
+			}
+
+			.history-section {
+				background: var(--bg-secondary);
+				border: 1px solid var(--border-color);
+				border-radius: 16px;
+				padding: 24px;
+				max-height: 500px;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.history-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 20px;
+			}
+
+			.history-header h3 {
+				font-size: 1.25rem;
+				font-weight: 700;
+			}
+
+			.clear-history-btn {
+				background: transparent;
+				border: 1px solid var(--border-color);
+				color: var(--text-secondary);
+				padding: 6px 12px;
+				border-radius: 8px;
+				font-size: 0.75rem;
+				cursor: pointer;
+				transition: all 0.2s ease;
+			}
+
+			.clear-history-btn:hover {
+				background: var(--bg-tertiary);
+				color: var(--text-primary);
+			}
+
+			.history-list {
+				flex: 1;
+				overflow-y: auto;
+				margin-bottom: 20px;
+				max-height: 300px;
+			}
+
+			.history-empty {
+				text-align: center;
+				padding: 40px 20px;
+				color: var(--text-secondary);
+			}
+
+			.empty-icon {
+				font-size: 3rem;
+				display: block;
+				margin-bottom: 12px;
+			}
+
+			.history-item {
+				background: var(--bg-tertiary);
+				border: 1px solid var(--border-color);
+				border-radius: 12px;
+				padding: 16px;
+				margin-bottom: 12px;
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				transition: all 0.2s ease;
+			}
+
+			.history-item:hover {
+				background: var(--bg-primary);
+			}
+
+			.history-icon {
+				font-size: 1.5rem;
+			}
+
+			.history-details {
+				flex: 1;
+			}
+
+			.history-type {
+				font-size: 0.875rem;
+				font-weight: 600;
+				margin-bottom: 4px;
+			}
+
+			.history-time {
+				font-size: 0.75rem;
+				color: var(--text-secondary);
+			}
+
+			.history-duration {
+				font-size: 0.875rem;
+				font-weight: 600;
+				color: var(--text-secondary);
+			}
+
+			.history-stats {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 16px;
+				padding-top: 20px;
+				border-top: 1px solid var(--border-color);
+			}
+
+			.stat-box {
+				text-align: center;
+			}
+
+			.stat-number {
+				display: block;
+				font-size: 2rem;
+				font-weight: 800;
+				color: var(--accent-pomodoro);
+				margin-bottom: 4px;
+			}
+
+			.stat-label {
+				font-size: 0.75rem;
+				color: var(--text-secondary);
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			@keyframes pulse {
+				0%, 100% {
+					transform: scale(1);
+				}
+				50% {
+					transform: scale(1.1);
+				}
+			}
+
+			.timer-container.pulse {
+				animation: pulse 0.5s ease-in-out;
+			}
+
+			@media (max-width: 1200px) {
+				.main-layout {
+					grid-template-columns: 1fr;
+				}
+
+				.left-panel {
+					border-right: none;
+					border-bottom: 1px solid var(--border-color);
+				}
+			}
+
+			@media (max-width: 768px) {
+				.left-panel, .right-panel {
+					padding: 20px;
+				}
+
+				.timer-container {
+					width: 280px;
+					height: 280px;
+				}
+
+				.timer-text {
+					font-size: 3.5rem;
+				}
+
+				.controls {
+					flex-wrap: wrap;
+				}
+
+				.control-btn {
+					flex: 1;
+					min-width: 120px;
+				}
+			}
+		</style>
+
+		<script>
+			class PomodoroTimer {
+				constructor() {
+					// DOM Elements
+					this.timerDisplay = document.getElementById('timerDisplay');
+					this.timerLabel = document.getElementById('timerLabel');
+					this.startBtn = document.getElementById('startBtn');
+					this.resetBtn = document.getElementById('resetBtn');
+					this.skipBtn = document.getElementById('skipBtn');
+					this.sessionBadge = document.getElementById('sessionBadge');
+					this.timerProgress = document.querySelector('.timer-progress');
+					this.timerContainer = document.querySelector('.timer-container');
+					this.focusImage = document.getElementById('focusImage');
+					this.cycleDots = document.getElementById('cycleDots');
+					this.cycleInfo = document.getElementById('cycleInfo');
+					this.autoModeCheckbox = document.getElementById('autoMode');
+					this.historyList = document.getElementById('historyList');
+					this.totalPomodorosEl = document.getElementById('totalPomodoros');
+					this.totalMinutesEl = document.getElementById('totalMinutes');
+					this.currentStreakEl = document.getElementById('currentStreak');
+					this.clearHistoryBtn = document.getElementById('clearHistoryBtn');
+					this.modeBtns = document.querySelectorAll('.mode-btn');
+					
+					// Timer State
+					this.sessions = {
+						'pomodoro': { minutes: 25, label: 'Pomodoro', icon: '🍅', type: 'work' },
+						'long-focus': { minutes: 50, label: 'Focus Largo', icon: '🔥', type: 'work' },
+						'short-break': { minutes: 5, label: 'Descanso Corto', icon: '☕', type: 'break' },
+						'long-break': { minutes: 15, label: 'Descanso Largo', icon: '🌟', type: 'break' }
+					};
+					
+					this.currentSession = 'pomodoro';
+					this.totalSeconds = this.sessions[this.currentSession].minutes * 60;
+					this.remainingSeconds = this.totalSeconds;
+					this.isRunning = false;
+					this.intervalId = null;
+					
+					// Cycle tracking
+					this.pomodorosInCycle = 0;
+					this.totalPomodoros = 0;
+					this.currentStreak = 0;
+					
+					// Audio
+					this.alarmSound = new Audio('/audio/Alarm Clock.mp3');
+					this.beepSound = new Audio('/audio/Beep Short .mp3');
+					
+					// Images
+					this.images = ['/image/01.jpg', '/image/02.jpg', '/image/03.jpg'];
+					
+					// Circle config
+					this.circumference = 2 * Math.PI * 90;
+					this.timerProgress.style.strokeDasharray = `${this.circumference} ${this.circumference}`;
+					
+					// History
+					this.history = this.loadHistory();
+					
+					this.init();
+				}
+				
+				init() {
+					this.startBtn.addEventListener('click', () => this.toggleTimer());
+					this.resetBtn.addEventListener('click', () => this.resetTimer());
+					this.skipBtn.addEventListener('click', () => this.skipSession());
+					this.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+					
+					this.modeBtns.forEach(btn => {
+						btn.addEventListener('click', () => {
+							if (!this.isRunning) {
+								const mode = btn.dataset.mode;
+								this.changeMode(mode, btn);
+							}
+						});
+					});
+					
+					this.updateDisplay();
+					this.updateProgress();
+					this.updateUI();
+					this.updateCycleIndicator();
+					this.renderHistory();
+					this.changeImage();
+				}
+				
+				changeMode(mode, btn) {
+					this.modeBtns.forEach(b => b.classList.remove('active'));
+					btn.classList.add('active');
+					
+					this.currentSession = mode;
+					this.totalSeconds = this.sessions[mode].minutes * 60;
+					this.remainingSeconds = this.totalSeconds;
+					
+					this.beepSound.play().catch(() => {});
+					
+					this.updateDisplay();
+					this.updateProgress();
+					this.updateUI();
+					this.changeImage();
+				}
+				
+				toggleTimer() {
+					if (this.isRunning) {
+						this.pauseTimer();
+					} else {
+						this.startTimer();
+					}
+				}
+				
+				startTimer() {
+					this.isRunning = true;
+					this.startBtn.classList.add('running');
+					this.startBtn.querySelector('.btn-icon').textContent = '⏸';
+					this.startBtn.querySelector('.btn-text').textContent = 'Pausar';
+					this.timerLabel.textContent = 'Enfocado... ¡Tú puedes!';
+					
+					this.intervalId = setInterval(() => {
+						this.remainingSeconds--;
+						
+						if (this.remainingSeconds <= 0) {
+							this.sessionComplete();
+						} else {
+							this.updateDisplay();
+							this.updateProgress();
+						}
+					}, 1000);
+				}
+				
+				pauseTimer() {
+					this.isRunning = false;
+					this.startBtn.classList.remove('running');
+					this.startBtn.querySelector('.btn-icon').textContent = '▶';
+					this.startBtn.querySelector('.btn-text').textContent = 'Continuar';
+					this.timerLabel.textContent = 'En pausa';
+					
+					clearInterval(this.intervalId);
+				}
+				
+				resetTimer() {
+					this.isRunning = false;
+					this.startBtn.classList.remove('running');
+					this.startBtn.querySelector('.btn-icon').textContent = '▶';
+					this.startBtn.querySelector('.btn-text').textContent = 'Iniciar';
+					
+					clearInterval(this.intervalId);
+					
+					this.remainingSeconds = this.totalSeconds;
+					this.updateDisplay();
+					this.updateProgress();
+					this.updateUI();
+					
+					this.beepSound.play().catch(() => {});
+				}
+				
+				skipSession() {
+					if (!this.isRunning) {
+						this.sessionComplete();
+					}
+				}
+				
+				sessionComplete() {
+					this.isRunning = false;
+					clearInterval(this.intervalId);
+					
+					this.remainingSeconds = 0;
+					this.updateDisplay();
+					this.updateProgress();
+					
+					// Play completion sound
+					this.alarmSound.play().catch(() => {});
+					
+					// Add to history
+					this.addToHistory(this.currentSession);
+					
+					// Pulse animation
+					this.timerContainer.classList.add('pulse');
+					setTimeout(() => {
+						this.timerContainer.classList.remove('pulse');
+					}, 500);
+					
+					// Update cycle tracking
+					if (this.sessions[this.currentSession].type === 'work') {
+						if (this.currentSession === 'pomodoro') {
+							this.pomodorosInCycle++;
+							this.totalPomodoros++;
+							this.currentStreak++;
+						}
+					}
+					
+					this.timerLabel.textContent = '¡Completado! 🎉';
+					this.startBtn.classList.remove('running');
+					this.startBtn.querySelector('.btn-icon').textContent = '▶';
+					this.startBtn.querySelector('.btn-text').textContent = 'Iniciar';
+					
+					// Update stats
+					this.updateStats();
+					this.updateCycleIndicator();
+					
+					// Auto-start next session if enabled
+					if (this.autoModeCheckbox.checked) {
+						setTimeout(() => {
+							this.startNextSession();
+						}, 3000);
+					} else {
+						setTimeout(() => {
+							this.remainingSeconds = this.totalSeconds;
+							this.updateDisplay();
+							this.updateProgress();
+							this.updateUI();
+						}, 3000);
+					}
+				}
+				
+				startNextSession() {
+					let nextSession;
+					
+					if (this.currentSession === 'pomodoro') {
+						// After pomodoro, take a break
+						if (this.pomodorosInCycle >= 4) {
+							// Long break after 4 pomodoros
+							nextSession = 'long-break';
+							this.pomodorosInCycle = 0;
+						} else {
+							// Short break
+							nextSession = 'short-break';
+						}
+					} else if (this.currentSession === 'short-break' || this.currentSession === 'long-break') {
+						// After break, back to pomodoro
+						nextSession = 'pomodoro';
+					} else if (this.currentSession === 'long-focus') {
+						// After long focus, take long break
+						nextSession = 'long-break';
+					}
+					
+					// Update active button
+					this.modeBtns.forEach(btn => {
+						btn.classList.remove('active');
+						if (btn.dataset.mode === 'pomodoro') {
+							btn.classList.add('active');
+						}
+					});
+					
+					this.currentSession = nextSession;
+					this.totalSeconds = this.sessions[nextSession].minutes * 60;
+					this.remainingSeconds = this.totalSeconds;
+					
+					this.updateDisplay();
+					this.updateProgress();
+					this.updateUI();
+					this.updateCycleIndicator();
+					this.changeImage();
+					
+					// Auto-start
+					this.startTimer();
+				}
+				
+				changeImage() {
+					const randomImage = this.images[Math.floor(Math.random() * this.images.length)];
+					this.focusImage.style.opacity = '0';
+					setTimeout(() => {
+						this.focusImage.src = randomImage;
+						this.focusImage.style.opacity = '1';
+					}, 250);
+				}
+				
+				updateDisplay() {
+					const minutes = Math.floor(this.remainingSeconds / 60);
+					const seconds = this.remainingSeconds % 60;
+					this.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+				}
+				
+				updateProgress() {
+					const progress = this.remainingSeconds / this.totalSeconds;
+					const offset = this.circumference * (1 - progress);
+					this.timerProgress.style.strokeDashoffset = offset;
+				}
+				
+				updateUI() {
+					const session = this.sessions[this.currentSession];
+					this.sessionBadge.textContent = session.label;
+					
+					// Update badge and progress color
+					this.sessionBadge.className = 'session-badge';
+					this.timerProgress.className = 'timer-progress';
+					
+					if (this.currentSession === 'short-break' || this.currentSession === 'long-break') {
+						this.sessionBadge.classList.add(this.currentSession === 'long-break' ? 'long-break' : 'break');
+						this.timerProgress.classList.add(this.currentSession === 'long-break' ? 'long-break' : 'break');
+					} else if (this.currentSession === 'long-focus') {
+						this.sessionBadge.classList.add('long-focus');
+						this.timerProgress.classList.add('long-focus');
+					}
+					
+					if (!this.isRunning) {
+						this.timerLabel.textContent = `Presiona iniciar para ${session.label.toLowerCase()}`;
+					}
+				}
+				
+				updateCycleIndicator() {
+					const dots = this.cycleDots.querySelectorAll('.dot');
+					dots.forEach((dot, index) => {
+						dot.className = 'dot';
+						if (index < this.pomodorosInCycle) {
+							dot.classList.add('completed');
+						}
+						if (index === this.pomodorosInCycle) {
+							dot.classList.add('active');
+						}
+					});
+					
+					this.cycleInfo.textContent = `${this.pomodorosInCycle} de 4 pomodoros`;
+				}
+				
+				addToHistory(session) {
+					const now = new Date();
+					const entry = {
+						session: session,
+						timestamp: now.getTime(),
+						duration: this.sessions[session].minutes,
+						icon: this.sessions[session].icon
+					};
+					
+					this.history.unshift(entry);
+					
+					// Keep only today's history
+					const today = new Date();
+					today.setHours(0, 0, 0, 0);
+					this.history = this.history.filter(h => h.timestamp >= today.getTime());
+					
+					this.saveHistory();
+					this.renderHistory();
+				}
+				
+				renderHistory() {
+					if (this.history.length === 0) {
+						this.historyList.innerHTML = `
+							<div class="history-empty">
+								<span class="empty-icon">📝</span>
+								<p>Aún no has completado ninguna sesión hoy</p>
+							</div>
+						`;
+						return;
+					}
+					
+					this.historyList.innerHTML = this.history.map(entry => {
+						const time = new Date(entry.timestamp);
+						const timeStr = time.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+						
+						return `
+							<div class="history-item">
+								<span class="history-icon">${entry.icon}</span>
+								<div class="history-details">
+									<div class="history-type">${this.sessions[entry.session].label}</div>
+									<div class="history-time">${timeStr}</div>
+								</div>
+								<div class="history-duration">${entry.duration} min</div>
+							</div>
+						`;
+					}).join('');
+				}
+				
+				updateStats() {
+					const workSessions = this.history.filter(h => this.sessions[h.session].type === 'work');
+					const totalMinutes = this.history.reduce((sum, h) => sum + h.duration, 0);
+					
+					this.totalPomodorosEl.textContent = workSessions.length;
+					this.totalMinutesEl.textContent = totalMinutes;
+					this.currentStreakEl.textContent = this.currentStreak;
+				}
+				
+				clearHistory() {
+					if (confirm('¿Estás seguro de que quieres limpiar el historial?')) {
+						this.history = [];
+						this.saveHistory();
+						this.renderHistory();
+						this.updateStats();
+					}
+				}
+				
+				loadHistory() {
+					const saved = localStorage.getItem('pomodoro-history');
+					if (saved) {
+						return JSON.parse(saved);
+					}
+					return [];
+				}
+				
+				saveHistory() {
+					localStorage.setItem('pomodoro-history', JSON.stringify(this.history));
+				}
+			}
+			
+			// Initialize the timer when DOM is loaded
+			document.addEventListener('DOMContentLoaded', () => {
+				new PomodoroTimer();
+			});
+		</script>
 	</body>
 </html>

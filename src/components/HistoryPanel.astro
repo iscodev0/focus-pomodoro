@@ -1,0 +1,157 @@
+---
+// History panel showing completed sessions and statistics
+---
+
+<div class="history-section">
+	<div class="history-header">
+		<h3>📊 Historial de hoy</h3>
+		<button class="clear-history-btn" id="clearHistoryBtn">Limpiar</button>
+	</div>
+	<div class="history-list" id="historyList">
+		<div class="history-empty">
+			<span class="empty-icon">📝</span>
+			<p>Aún no has completado ninguna sesión hoy</p>
+		</div>
+	</div>
+	<div class="history-stats">
+		<div class="stat-box">
+			<span class="stat-number" id="totalPomodoros">0</span>
+			<span class="stat-label">Pomodoros</span>
+		</div>
+		<div class="stat-box">
+			<span class="stat-number" id="totalMinutes">0</span>
+			<span class="stat-label">Minutos</span>
+		</div>
+		<div class="stat-box">
+			<span class="stat-number" id="currentStreak">0</span>
+			<span class="stat-label">Racha</span>
+		</div>
+	</div>
+</div>
+
+<style>
+	.history-section {
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-color);
+		border-radius: 16px;
+		padding: 24px;
+		max-height: 500px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.history-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 20px;
+	}
+
+	.history-header h3 {
+		font-size: 1.25rem;
+		font-weight: 700;
+	}
+
+	.clear-history-btn {
+		background: transparent;
+		border: 1px solid var(--border-color);
+		color: var(--text-secondary);
+		padding: 6px 12px;
+		border-radius: 8px;
+		font-size: 0.75rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.clear-history-btn:hover {
+		background: var(--bg-tertiary);
+		color: var(--text-primary);
+	}
+
+	.history-list {
+		flex: 1;
+		overflow-y: auto;
+		margin-bottom: 20px;
+		max-height: 300px;
+	}
+
+	.history-empty {
+		text-align: center;
+		padding: 40px 20px;
+		color: var(--text-secondary);
+	}
+
+	.empty-icon {
+		font-size: 3rem;
+		display: block;
+		margin-bottom: 12px;
+	}
+
+	.history-item {
+		background: var(--bg-tertiary);
+		border: 1px solid var(--border-color);
+		border-radius: 12px;
+		padding: 16px;
+		margin-bottom: 12px;
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		transition: all 0.2s ease;
+	}
+
+	.history-item:hover {
+		background: var(--bg-primary);
+	}
+
+	.history-icon {
+		font-size: 1.5rem;
+	}
+
+	.history-details {
+		flex: 1;
+	}
+
+	.history-type {
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin-bottom: 4px;
+	}
+
+	.history-time {
+		font-size: 0.75rem;
+		color: var(--text-secondary);
+	}
+
+	.history-duration {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--text-secondary);
+	}
+
+	.history-stats {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px;
+		padding-top: 20px;
+		border-top: 1px solid var(--border-color);
+	}
+
+	.stat-box {
+		text-align: center;
+	}
+
+	.stat-number {
+		display: block;
+		font-size: 2rem;
+		font-weight: 800;
+		color: var(--accent-pomodoro);
+		margin-bottom: 4px;
+	}
+
+	.stat-label {
+		font-size: 0.75rem;
+		color: var(--text-secondary);
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+</style>
