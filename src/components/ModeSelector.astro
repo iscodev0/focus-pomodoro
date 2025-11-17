@@ -13,6 +13,11 @@
 		<span class="mode-name">Focus Largo</span>
 		<span class="mode-time">50 min</span>
 	</button>
+	<button class="mode-btn mode-btn--full" data-mode="refocus-2" data-minutes="2">
+		<span class="mode-icon">🔄</span>
+		<span class="mode-name">Reenfoque</span>
+		<span class="mode-time">2 min</span>
+	</button>
 </div>
 
 <style>
@@ -59,5 +64,9 @@
 	.mode-time {
 		font-size: 0.75rem;
 		color: var(--text-secondary);
+	}
+
+	.mode-btn--full {
+		grid-column: 1 / -1;
 	}
 </style>

@@ -27,10 +27,11 @@ export class PomodoroTimer {
 		
 		// Timer State Configuration
 		this.sessions = {
-			'pomodoro': { minutes: 25, label: 'Pomodoro', icon: '🍅', type: 'work' },
-			'long-focus': { minutes: 50, label: 'Focus Largo', icon: '🔥', type: 'work' },
-			'short-break': { minutes: 5, label: 'Descanso Corto', icon: '☕', type: 'break' },
-			'long-break': { minutes: 15, label: 'Descanso Largo', icon: '🌟', type: 'break' }
+			'pomodoro': { minutes: 25, label: 'Pomodoro', icon: '', type: 'work' },
+			'long-focus': { minutes: 50, label: 'Focus Largo', icon: '', type: 'work' },
+			'short-break': { minutes: 5, label: 'Descanso Corto', icon: '', type: 'break' },
+			'long-break': { minutes: 15, label: 'Descanso Largo', icon: '', type: 'break' },
+			'refocus-2': { minutes: 2, label: 'Reenfoque Rápido', icon: '', type: 'work' }
 		};
 		
 		// Current session state
@@ -124,7 +125,7 @@ export class PomodoroTimer {
 	startTimer() {
 		this.isRunning = true;
 		this.startBtn.classList.add('running');
-		this.startBtn.querySelector('.btn-icon').textContent = '⏸';
+		this.startBtn.querySelector('.btn-icon').textContent = '';
 		this.startBtn.querySelector('.btn-text').textContent = 'Pausar';
 		this.timerLabel.textContent = 'Enfocado... ¡Tú puedes!';
 		
@@ -146,7 +147,7 @@ export class PomodoroTimer {
 	pauseTimer() {
 		this.isRunning = false;
 		this.startBtn.classList.remove('running');
-		this.startBtn.querySelector('.btn-icon').textContent = '▶';
+		this.startBtn.querySelector('.btn-icon').textContent = '';
 		this.startBtn.querySelector('.btn-text').textContent = 'Continuar';
 		this.timerLabel.textContent = 'En pausa';
 		
@@ -159,7 +160,7 @@ export class PomodoroTimer {
 	resetTimer() {
 		this.isRunning = false;
 		this.startBtn.classList.remove('running');
-		this.startBtn.querySelector('.btn-icon').textContent = '▶';
+		this.startBtn.querySelector('.btn-icon').textContent = '';
 		this.startBtn.querySelector('.btn-text').textContent = 'Iniciar';
 		
 		clearInterval(this.intervalId);
@@ -213,9 +214,9 @@ export class PomodoroTimer {
 			}
 		}
 		
-		this.timerLabel.textContent = '¡Completado! 🎉';
+		this.timerLabel.textContent = '¡Completado! ';
 		this.startBtn.classList.remove('running');
-		this.startBtn.querySelector('.btn-icon').textContent = '▶';
+		this.startBtn.querySelector('.btn-icon').textContent = '';
 		this.startBtn.querySelector('.btn-text').textContent = 'Iniciar';
 		
 		// Update stats
@@ -259,6 +260,9 @@ export class PomodoroTimer {
 		} else if (this.currentSession === 'long-focus') {
 			// After long focus, take long break
 			nextSession = 'long-break';
+		} else if (this.currentSession === 'refocus-2') {
+			// After a short refocus, start a normal pomodoro
+			nextSession = 'pomodoro';
 		}
 		
 		// Update active button
